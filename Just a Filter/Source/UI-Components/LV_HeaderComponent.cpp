@@ -24,13 +24,13 @@ LV_HeaderComponent::LV_HeaderComponent(juce::AudioProcessorValueTreeState& tree)
     addAndMakeVisible(oversamplingMenu);
     
     bandwidthTypeMenuAttach = std::make_unique<ComboBoxAttachment>(tree, bandwidthTypeID, bandwidthTypeMenu);
-    bandwidthTypeMenu.setTextWhenNothingSelected("Q Type");
+    bandwidthTypeMenu.setTextWhenNothingSelected("Q");
     bandwidthTypeMenu.addItem("Linear", 1);
     bandwidthTypeMenu.addItem("Propotional", 2);
     addAndMakeVisible(bandwidthTypeMenu);
     
     filterTypeMenuAttach = std::make_unique<ComboBoxAttachment>(tree, filterTypeID, filterTypeMenu);
-    filterTypeMenu.setTextWhenNothingSelected("Filter Type");
+    filterTypeMenu.setTextWhenNothingSelected("Type");
     filterTypeMenu.addItem("Low Shelf", 1);
     filterTypeMenu.addItem("Low Cut", 2);
     filterTypeMenu.addItem("Notch", 3);

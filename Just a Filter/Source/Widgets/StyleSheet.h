@@ -132,9 +132,13 @@ namespace juce
 
     class LV_Custom_Menu : public LookAndFeel_V4
     {
-        Font getComboBoxFont (ComboBox& box)
+        void positionComboBoxText (ComboBox& box, Label& label)
         {
-            return box.getWidth() * 0.15f;
+            label.setBounds (1, 1,
+                             box.getWidth() - 30,
+                             box.getHeight() - 2);
+
+            label.setFont (Font (juce::Font ("Helvetica", box.getWidth() * 0.15f, juce::Font::FontStyleFlags::bold)));
         }
     };
     
