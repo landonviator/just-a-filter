@@ -50,47 +50,13 @@ void LV_SVFilter::setGain(float value)
 
 float LV_SVFilter::getShelfQ(float value) const
 {
-    if (value <= 12.0f && value >= -12.0f)
-    {
-        return pow(10.0f, abs(value) / 80.0f) - 0.8f;
-    }
-    
-    else
-    {
-        return 0.69f;
-    }
+    return std::pow(10.0f, std::abs(value) / 20.0f) * 0.25f - 0.24f;
 }
 //==============================================================================
 
 float LV_SVFilter::getPeakQ(float value) const
 {
-    // Outside of these ranges would break the DSP that controls the Q
-    if (value <= 12.0f && value >= -12.0f)
-    {
-        if (value > 0.0f)
-        {
-            return pow(10.0f, abs(value) / 60.0f) - 0.9f;
-        }
-        
-        else
-        {
-            return pow(10.0f, abs(value) / 45.0f) - 0.9f;
-        }
-    }
-    
-    else
-    {
-        
-        if (value > 12.0f)
-        {
-            return  0.79f;
-        }
-        
-        else
-        {
-            return 0.95f;
-        }
-    }
+    return std::pow(10.0f, std::abs(value) / 20.0f) * 0.2f;
 }
 //==============================================================================
 

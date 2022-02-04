@@ -38,10 +38,10 @@ public:
     enum FilterType
     {
         kLowShelf,
-        kBandShelf,
-        kHighShelf,
-        kLowPass,
         kHighPass,
+        kBandShelf,
+        kLowPass,
+        kHighShelf
     };
     
     enum QType

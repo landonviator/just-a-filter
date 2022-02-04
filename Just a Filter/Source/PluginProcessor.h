@@ -9,6 +9,18 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "DSP/LV_SVFilter.h"
+
+#define filterTypeID "filter type"
+#define filterTypeName "Filter Type"
+#define bandwidthTypeID "bandwidth type"
+#define bandwidthTypeName "Bandwidth Type"
+#define cutoffID "cutoff"
+#define cutoffName "Cutoff"
+#define bandwidthID "bandwidth"
+#define bandwidthName "Bandwidth"
+#define gainID "gain"
+#define gainName "Gain"
 
 //==============================================================================
 /**
@@ -73,6 +85,9 @@ public:
     float windowHeight {0.0f};
 
 private:
+    
+    LV_SVFilter filterModule;
+    void initFilter();
     
     /** Parameters ======================================================*/
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();

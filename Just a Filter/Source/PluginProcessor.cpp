@@ -23,10 +23,21 @@ JustaFilterAudioProcessor::JustaFilterAudioProcessor()
 treeState (*this, nullptr, "PARAMETER", createParameterLayout())
 #endif
 {
+    treeState.addParameterListener (filterTypeID, this);
+    treeState.addParameterListener (bandwidthTypeID, this);
+    treeState.addParameterListener (cutoffID, this);
+    treeState.addParameterListener (bandwidthID, this);
+    treeState.addParameterListener (gainID, this);
 }
 
 JustaFilterAudioProcessor::~JustaFilterAudioProcessor()
 {
+    treeState.removeParameterListener (filterTypeID, this);
+    treeState.removeParameterListener (bandwidthTypeID, this);
+    treeState.removeParameterListener (cutoffID, this);
+    treeState.removeParameterListener (bandwidthID, this);
+    treeState.removeParameterListener (gainID, this);
+
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout JustaFilterAudioProcessor::createParameterLayout()
@@ -51,20 +62,20 @@ juce::AudioProcessorValueTreeState::ParameterLayout JustaFilterAudioProcessor::c
         "Proportional"
     };
 
-  auto pFilterType = std::make_unique<juce::AudioParameterChoice>("filter type", "Filter Type", filterTypes, 0);
+  auto pFilterType = std::make_unique<juce::AudioParameterChoice>(filterTypeID, filterTypeName, filterTypes, 0);
     
-  auto pQType = std::make_unique<juce::AudioParameterChoice>("bandwidth type", "Bandwith Type", qTypes, 0);
+  auto pBandwithType = std::make_unique<juce::AudioParameterChoice>(bandwidthTypeID, bandwidthTypeName, qTypes, 0);
     
-  auto pCutoff = std::make_unique<juce::AudioParameterFloat>("cutoff", "Cutoff", juce::NormalisableRange<float> (20.0f, 20000.0f, 1.0f, 0.3f, false), 1000.0f);
+  auto pCutoff = std::make_unique<juce::AudioParameterFloat>(cutoffID, cutoffName, juce::NormalisableRange<float> (20.0f, 20000.0f, 1.0f, 0.3f, false), 1000.0f);
     
-  auto pQ = std::make_unique<juce::AudioParameterFloat>("q", "Q", 0.05f, 0.95f, 0.33f);
+  auto pBandwith = std::make_unique<juce::AudioParameterFloat>(bandwidthID, bandwidthName, 0.05f, 0.95f, 0.33f);
     
-  auto pQGain = std::make_unique<juce::AudioParameterFloat>("gain", "Gain", -24.0f, 24.0f, 0.0f);
+  auto pQGain = std::make_unique<juce::AudioParameterFloat>(gainID, gainName, -12.0f, 12.0f, 0.0f);
   
   params.push_back(std::move(pFilterType));
-  params.push_back(std::move(pQType));
+  params.push_back(std::move(pBandwithType));
   params.push_back(std::move(pCutoff));
-  params.push_back(std::move(pQ));
+  params.push_back(std::move(pBandwith));
   params.push_back(std::move(pQGain));
 
   return { params.begin(), params.end() };
@@ -72,6 +83,31 @@ juce::AudioProcessorValueTreeState::ParameterLayout JustaFilterAudioProcessor::c
 
 void JustaFilterAudioProcessor::parameterChanged(const juce::String &parameterID, float newValue)
 {
+    
+    if (parameterID == filterTypeID)
+    {
+        filterModule.setParameter(LV_SVFilter::ParameterId::kType, static_cast<int>(newValue));
+    }
+    
+    if (parameterID == bandwidthTypeID)
+    {
+        filterModule.setParameter(LV_SVFilter::ParameterId::kQType, newValue);
+    }
+    
+    if (parameterID == cutoffID)
+    {
+        filterModule.setParameter(LV_SVFilter::ParameterId::kCutoff, newValue);
+    }
+    
+    if (parameterID == bandwidthID)
+    {
+        filterModule.setParameter(LV_SVFilter::ParameterId::kQ, newValue);
+    }
+    
+    if (parameterID == gainID)
+    {
+        filterModule.setParameter(LV_SVFilter::ParameterId::kGain, newValue);
+    }
 }
 
 //==============================================================================
@@ -139,8 +175,13 @@ void JustaFilterAudioProcessor::changeProgramName (int index, const juce::String
 //==============================================================================
 void JustaFilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    juce::dsp::ProcessSpec spec;
+    spec.maximumBlockSize = samplesPerBlock;
+    spec.sampleRate = sampleRate;
+    spec.numChannels = getTotalNumOutputChannels();
+    
+    filterModule.prepare(spec);
+    initFilter();
 }
 
 void JustaFilterAudioProcessor::releaseResources()
@@ -184,12 +225,8 @@ void JustaFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-
-        // ..do something to the data...
-    }
+    juce::dsp::AudioBlock<float> audioBlock {buffer};
+    filterModule.processBlock(audioBlock);
 }
 
 //==============================================================================
@@ -207,15 +244,29 @@ juce::AudioProcessorEditor* JustaFilterAudioProcessor::createEditor()
 //==============================================================================
 void JustaFilterAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    // Save params
+    treeState.state.appendChild(variableTree, nullptr);
+    juce::MemoryOutputStream stream(destData, false);
+    treeState.state.writeToStream (stream);
 }
 
 void JustaFilterAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    // Recall params
+    auto tree = juce::ValueTree::readFromData (data, size_t(sizeInBytes));
+    variableTree = tree.getChildWithName("Variables");
+    
+    if (tree.isValid())
+    {
+        treeState.state = tree;
+        
+        // Window Size
+        windowWidth = variableTree.getProperty("width");
+        windowHeight = variableTree.getProperty("height");
+        
+        //Filter params
+        initFilter();
+    }
 }
 
 //==============================================================================

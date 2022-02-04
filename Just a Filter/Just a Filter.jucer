@@ -18,6 +18,7 @@
         <FILE id="JIvwaI" name="TEXTURE5.png" compile="0" resource="1" file="Source/Assets/TEXTURE5.png"/>
       </GROUP>
       <GROUP id="{4D5B75DD-0324-6AD3-1AFF-746C0CC11F11}" name="DSP">
+        <FILE id="f4VInD" name="Initfilter.cpp" compile="1" resource="0" file="Source/DSP/Initfilter.cpp"/>
         <FILE id="IawMdT" name="LV_Clipper.cpp" compile="1" resource="0" file="Source/DSP/LV_Clipper.cpp"/>
         <FILE id="X91hRZ" name="LV_Clipper.h" compile="0" resource="0" file="Source/DSP/LV_Clipper.h"/>
         <FILE id="tgSYnP" name="LV_SVFilter.cpp" compile="1" resource="0" file="Source/DSP/LV_SVFilter.cpp"/>
