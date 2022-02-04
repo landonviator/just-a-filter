@@ -21,6 +21,8 @@
 #define bandwidthName "Bandwidth"
 #define gainID "gain"
 #define gainName "Gain"
+#define qualityID "quality"
+#define qualityName "Quality"
 
 //==============================================================================
 /**

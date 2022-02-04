@@ -16,16 +16,20 @@ LV_HeaderComponent::LV_HeaderComponent(juce::AudioProcessorValueTreeState& tree)
 {
     using ComboBoxAttachment = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
     
+    oversamplingMenuAttach = std::make_unique<ComboBoxAttachment>(tree, qualityID, oversamplingMenu);
+
     oversamplingMenu.setTextWhenNothingSelected("Quality");
     oversamplingMenu.addItem("Normal Quality", 1);
     oversamplingMenu.addItem("High Quality", 2);
     addAndMakeVisible(oversamplingMenu);
     
+    bandwidthTypeMenuAttach = std::make_unique<ComboBoxAttachment>(tree, bandwidthTypeID, bandwidthTypeMenu);
     bandwidthTypeMenu.setTextWhenNothingSelected("Q Type");
     bandwidthTypeMenu.addItem("Linear", 1);
     bandwidthTypeMenu.addItem("Propotional", 2);
     addAndMakeVisible(bandwidthTypeMenu);
     
+    filterTypeMenuAttach = std::make_unique<ComboBoxAttachment>(tree, filterTypeID, filterTypeMenu);
     filterTypeMenu.setTextWhenNothingSelected("Filter Type");
     filterTypeMenu.addItem("Low Shelf", 1);
     filterTypeMenu.addItem("Low Cut", 2);
@@ -37,6 +41,9 @@ LV_HeaderComponent::LV_HeaderComponent(juce::AudioProcessorValueTreeState& tree)
 
 LV_HeaderComponent::~LV_HeaderComponent()
 {
+    oversamplingMenuAttach = nullptr;
+    filterTypeMenuAttach = nullptr;
+    bandwidthTypeMenuAttach = nullptr;
 }
 
 void LV_HeaderComponent::paint (juce::Graphics& g)

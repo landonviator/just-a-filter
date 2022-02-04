@@ -11,6 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "../PluginProcessor.h"
 #include "../Widgets/WidgetIncludes.h"
 //==============================================================================
 /*
@@ -34,7 +35,8 @@ private:
     using ComboBoxAttachment = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
     
     std::unique_ptr<ComboBoxAttachment> oversamplingMenuAttach;
-    std::unique_ptr<ComboBoxAttachment> clipTypeMenuAttach;
+    std::unique_ptr<ComboBoxAttachment> filterTypeMenuAttach;
+    std::unique_ptr<ComboBoxAttachment> bandwidthTypeMenuAttach;
     
     /** Logo and Link =========================================================*/
     juce::Image footerLogo;
