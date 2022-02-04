@@ -129,5 +129,13 @@ namespace juce
                                                    const String& text, const Justification& position,
                                                    GroupComponent& group) override;
     };
+
+    class LV_Custom_Menu : public LookAndFeel_V4
+    {
+        Font getComboBoxFont (ComboBox& box)
+        {
+            return box.getWidth() * 0.15f;
+        }
+    };
     
 }

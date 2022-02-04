@@ -10,6 +10,7 @@
 
 #pragma once
 #include <JuceHeader.h>
+#include "../Widgets/StyleSheet.h"
 
 namespace juce
 {
@@ -20,6 +21,7 @@ namespace juce
     
         LV_Menu()
         {
+            setLookAndFeel(&customMenu);
             setColour(juce::ComboBox::ColourIds::backgroundColourId, juce::Colours::black.brighter(0.1f).withAlpha(0.0f));
             setColour(juce::ComboBox::ColourIds::outlineColourId, juce::Colours::whitesmoke.withAlpha(0.0f));
             setColour(juce::ComboBox::ColourIds::focusedOutlineColourId, juce::Colours::black.withAlpha(0.5f));
@@ -34,7 +36,10 @@ namespace juce
             setJustificationType(juce::Justification::centred);
         }
         
-        
+        ~LV_Menu()
+        {
+            setLookAndFeel(nullptr);
+        }
         
     private:
         
@@ -54,5 +59,7 @@ namespace juce
             setColour(juce::ComboBox::ColourIds::backgroundColourId, juce::Colours::black.brighter(0.1f).withAlpha(0.0f));
             stopTimer();
         }
+        
+        LV_Custom_Menu customMenu;
     };
 }
