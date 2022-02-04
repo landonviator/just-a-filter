@@ -25,6 +25,10 @@
         <FILE id="fOQ2gx" name="LV_SVFilter.h" compile="0" resource="0" file="Source/DSP/LV_SVFilter.h"/>
       </GROUP>
       <GROUP id="{1C9C388A-C27F-983C-94C3-A83AEA492209}" name="UI-Components">
+        <FILE id="aZmWUN" name="LV_FilterComponent.cpp" compile="1" resource="0"
+              file="Source/UI-Components/LV_FilterComponent.cpp"/>
+        <FILE id="Gnj3ga" name="LV_FilterComponent.h" compile="0" resource="0"
+              file="Source/UI-Components/LV_FilterComponent.h"/>
         <FILE id="lyGNdh" name="LV_HeaderComponent.cpp" compile="1" resource="0"
               file="Source/UI-Components/LV_HeaderComponent.cpp"/>
         <FILE id="YimIij" name="LV_HeaderComponent.h" compile="0" resource="0"

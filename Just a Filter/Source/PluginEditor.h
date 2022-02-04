@@ -12,6 +12,7 @@
 #include "PluginProcessor.h"
 #include "UI-Components/LV_Window.h"
 #include "UI-Components/LV_HeaderComponent.h"
+#include "UI-Components/LV_FilterComponent.h"
 #include "Widgets/WidgetIncludes.h"
 
 //==============================================================================
@@ -45,6 +46,7 @@ private:
     bool constructorFinished {false};
     
     LV_HeaderComponent headerComponent;
+    LV_FilterComponent filterComponent;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JustaFilterAudioProcessorEditor)
 };

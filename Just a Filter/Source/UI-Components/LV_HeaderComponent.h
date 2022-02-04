@@ -28,7 +28,8 @@ public:
 private:
     
     juce::LV_Menu oversamplingMenu;
-    juce::LV_Menu clipTypeMenu;
+    juce::LV_Menu filterTypeMenu;
+    juce::LV_Menu bandwidthTypeMenu;
     
     using ComboBoxAttachment = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
     

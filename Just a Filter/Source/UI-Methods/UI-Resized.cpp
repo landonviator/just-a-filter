@@ -20,7 +20,9 @@ void JustaFilterAudioProcessorEditor::uiResized(float width, float height)
     windowComponent.setBounds(getLocalBounds());
     
     headerComponent.setWidthAndHeight(width, height);
-    headerComponent.setBounds(0, 0, width, height * 0.08f);
+    headerComponent.setBounds(0, 0, width, height * 0.12f);
+    
+    filterComponent.setBounds(0, height * 0.12f, width, height * 0.88f);
     
     // Save plugin size in the tree
     saveWindowSize();

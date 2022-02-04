@@ -51,6 +51,7 @@
 		68149668946E03233B21E0EA /* include_juce_audio_formats.mm */ = {isa = PBXBuildFile; fileRef = EEE89A4649381D6E2904980E; };
 		68D05FD858DD35613DF7B110 /* Shared Code */ = {isa = PBXBuildFile; fileRef = C29619C391DABFC7EE5E77A4; };
 		6F59FAA5BB9773648BB1A918 /* AudioUnit.framework */ = {isa = PBXBuildFile; fileRef = BE1977DDF6DF29219E7D4EEC; };
+		72EE60E25AE38F516B6D99A8 /* LV_FilterComponent.cpp */ = {isa = PBXBuildFile; fileRef = AD56560F67B8857D364424D4; };
 		75BA16C19D21C2279BBAC8B9 /* StyleSheet.cpp */ = {isa = PBXBuildFile; fileRef = 050C357FAC9B865BD422DB11; };
 		78F48BDCA7C91C066C49AF31 /* UI-SaveWindow.cpp */ = {isa = PBXBuildFile; fileRef = F4A8BB8A3BDCF7D0ACC91183; };
 		7B64AFA31F28F751285C4312 /* LV_SVFilter.cpp */ = {isa = PBXBuildFile; fileRef = EBFC3B152D0A89EE4CF99073; };
@@ -149,6 +150,7 @@
 		A7DCBB44E934EFBB12AF1B58 /* Standalone Plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Just a Filter.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A893523D78BB8A8294462472 /* LV_GroupComponent.h */ /* LV_GroupComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LV_GroupComponent.h; path = ../../Source/Widgets/LV_GroupComponent.h; sourceTree = SOURCE_ROOT; };
 		AB84A76E1EA08FA7804EA3D0 /* Initfilter.cpp */ /* Initfilter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Initfilter.cpp; path = ../../Source/DSP/Initfilter.cpp; sourceTree = SOURCE_ROOT; };
+		AD56560F67B8857D364424D4 /* LV_FilterComponent.cpp */ /* LV_FilterComponent.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = LV_FilterComponent.cpp; path = "../../Source/UI-Components/LV_FilterComponent.cpp"; sourceTree = SOURCE_ROOT; };
 		AF95894FB7E94A31B51FE1F0 /* AU */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Just a Filter.component"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4F1E18573436529EB3C2917 /* WebKit.framework */ /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		BC7496731022F70838F6E1FF /* include_juce_audio_processors.mm */ /* include_juce_audio_processors.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = include_juce_audio_processors.mm; path = ../../JuceLibraryCode/include_juce_audio_processors.mm; sourceTree = SOURCE_ROOT; };
@@ -161,6 +163,7 @@
 		CB63F1A5A07E9AF10387487A /* IOKit.framework */ /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		CBF96A03FC292C55FF217D5A /* LV_Dial.h */ /* LV_Dial.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LV_Dial.h; path = ../../Source/Widgets/LV_Dial.h; sourceTree = SOURCE_ROOT; };
 		D12A724771FFE0F5BC3AC7D9 /* BinaryData3.cpp */ /* BinaryData3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BinaryData3.cpp; path = ../../JuceLibraryCode/BinaryData3.cpp; sourceTree = SOURCE_ROOT; };
+		D2B9A588C1D8A03D2DE46BB5 /* LV_FilterComponent.h */ /* LV_FilterComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LV_FilterComponent.h; path = "../../Source/UI-Components/LV_FilterComponent.h"; sourceTree = SOURCE_ROOT; };
 		D359CA5C1075498CCD92DFC6 /* include_juce_graphics.mm */ /* include_juce_graphics.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = include_juce_graphics.mm; path = ../../JuceLibraryCode/include_juce_graphics.mm; sourceTree = SOURCE_ROOT; };
 		D37BD5D9B5C066B7BB0207AC /* Accelerate.framework */ /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		D9BAB2D3FF91CBC876284741 /* LV_Window.h */ /* LV_Window.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LV_Window.h; path = "../../Source/UI-Components/LV_Window.h"; sourceTree = SOURCE_ROOT; };
@@ -438,6 +441,8 @@
 		FF2FEA4A2E0C7124709AED43 /* UI-Components */ = {
 			isa = PBXGroup;
 			children = (
+				AD56560F67B8857D364424D4,
+				D2B9A588C1D8A03D2DE46BB5,
 				8DF4CA4297828419629C49AE,
 				A2D76A035EB81FDD2853544F,
 				8F96D97629BE42AC3F53EEA5,
@@ -723,6 +728,7 @@
 				89563C0525277BAC33B9489C,
 				9F8D0D0BBFBDD14DF80878FF,
 				7B64AFA31F28F751285C4312,
+				72EE60E25AE38F516B6D99A8,
 				35BF2014E0652F231D736384,
 				D135BCCC00C82AB64E9CE164,
 				9089E07C9942599B3251837A,

@@ -12,12 +12,14 @@
 
 void JustaFilterAudioProcessorEditor::uiConstructor()
 {
-    //addAndMakeVisible(windowComponent);
-    
     // Window
-    //initWindow();
+    initWindow();
+    addAndMakeVisible(windowComponent);
     
     // Header
-//    addAndMakeVisible(headerComponent);
+    addAndMakeVisible(headerComponent);
+    
+    //Filter
+    addAndMakeVisible(filterComponent);
 
 }

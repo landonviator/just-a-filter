@@ -37,7 +37,6 @@ JustaFilterAudioProcessor::~JustaFilterAudioProcessor()
     treeState.removeParameterListener (cutoffID, this);
     treeState.removeParameterListener (bandwidthID, this);
     treeState.removeParameterListener (gainID, this);
-
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout JustaFilterAudioProcessor::createParameterLayout()
@@ -45,7 +44,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout JustaFilterAudioProcessor::c
   std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
 
   // Make sure to update the number of reservations after adding params
-  //params.reserve(16);
+  params.reserve(5);
     
     juce::StringArray filterTypes =
     {
@@ -237,8 +236,8 @@ bool JustaFilterAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* JustaFilterAudioProcessor::createEditor()
 {
-    //return new JustaFilterAudioProcessorEditor (*this);
-    return new juce::GenericAudioProcessorEditor (*this);
+    return new JustaFilterAudioProcessorEditor (*this);
+    //return new juce::GenericAudioProcessorEditor (*this);
 }
 
 //==============================================================================

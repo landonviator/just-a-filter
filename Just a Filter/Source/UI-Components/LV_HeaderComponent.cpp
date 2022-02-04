@@ -21,11 +21,18 @@ LV_HeaderComponent::LV_HeaderComponent(juce::AudioProcessorValueTreeState& tree)
     oversamplingMenu.addItem("High Quality", 2);
     addAndMakeVisible(oversamplingMenu);
     
-    clipTypeMenu.setTextWhenNothingSelected("Clip Type");
-    clipTypeMenu.addItem("Hard", 1);
-    clipTypeMenu.addItem("Soft", 2);
-    clipTypeMenu.addItem("Analog", 3);
-    addAndMakeVisible(clipTypeMenu);
+    bandwidthTypeMenu.setTextWhenNothingSelected("Q Type");
+    bandwidthTypeMenu.addItem("Linear", 1);
+    bandwidthTypeMenu.addItem("Propotional", 2);
+    addAndMakeVisible(bandwidthTypeMenu);
+    
+    filterTypeMenu.setTextWhenNothingSelected("Filter Type");
+    filterTypeMenu.addItem("Low Shelf", 1);
+    filterTypeMenu.addItem("Low Cut", 2);
+    filterTypeMenu.addItem("Notch", 3);
+    filterTypeMenu.addItem("High Cut", 4);
+    filterTypeMenu.addItem("High Shelf", 5);
+    addAndMakeVisible(filterTypeMenu);
 }
 
 LV_HeaderComponent::~LV_HeaderComponent()
@@ -44,7 +51,7 @@ void LV_HeaderComponent::paint (juce::Graphics& g)
     footerLogo = juce::ImageCache::getFromMemory(BinaryData::landon5504_png, BinaryData::landon5504_pngSize);
 
     // Draw and position the image
-    g.drawImageWithin(footerLogo, width * 0.025, height * 0.01, width * 0.125, height * 0.065, juce::RectanglePlacement::centred);
+    g.drawImageWithin(footerLogo, width * 0.025, 4.0f, getHeight() * 3.5f, getHeight() * 0.75, juce::RectanglePlacement::stretchToFit);
 
     // Patreon link
     mWebLink.setURL(mWebUrl);
@@ -56,12 +63,13 @@ void LV_HeaderComponent::resized()
 {
     float rightMargin = width * 0.99f;
     float spaceBetween = width * 0.01f;
-    float topMargin = height * 0.0125f;
+    float topMargin = getHeight() * 0.125f;
     float menuWidth = width * 0.15f;
-    float menuHeight = height * 0.06f;
+    float menuHeight = getHeight() * 0.75f;
     
     oversamplingMenu.setBounds(rightMargin - menuWidth, topMargin, menuWidth, menuHeight);
-    clipTypeMenu.setBounds(oversamplingMenu.getX() - spaceBetween - oversamplingMenu.getWidth(), topMargin, menuWidth, menuHeight);
+    bandwidthTypeMenu.setBounds(oversamplingMenu.getX() - spaceBetween - oversamplingMenu.getWidth(), topMargin, menuWidth, menuHeight);
+    filterTypeMenu.setBounds(bandwidthTypeMenu.getX() - spaceBetween - bandwidthTypeMenu.getWidth(), topMargin, menuWidth, menuHeight);
 }
 
 void LV_HeaderComponent::setWidthAndHeight(float w, float h)
