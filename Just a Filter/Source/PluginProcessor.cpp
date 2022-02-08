@@ -30,7 +30,7 @@ oversamplingModule(2, 3, juce::dsp::Oversampling<float>::FilterType::filterHalfB
     treeState.addParameterListener (bandwidthID, this);
     treeState.addParameterListener (gainID, this);
     treeState.addParameterListener (qualityID, this);
-
+    treeState.addParameterListener (phaseID, this);
 }
 
 JustaFilterAudioProcessor::~JustaFilterAudioProcessor()
@@ -41,7 +41,7 @@ JustaFilterAudioProcessor::~JustaFilterAudioProcessor()
     treeState.removeParameterListener (bandwidthID, this);
     treeState.removeParameterListener (gainID, this);
     treeState.removeParameterListener (qualityID, this);
-
+    treeState.removeParameterListener (phaseID, this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout JustaFilterAudioProcessor::createParameterLayout()
@@ -49,7 +49,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout JustaFilterAudioProcessor::c
   std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
 
   // Make sure to update the number of reservations after adding params
-  params.reserve(5);
+  params.reserve(6);
     
     juce::StringArray filterTypes =
     {
@@ -77,6 +77,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout JustaFilterAudioProcessor::c
   auto pQGain = std::make_unique<juce::AudioParameterFloat>(gainID, gainName, -12.0f, 12.0f, 0.0f);
   
   auto pQuality = std::make_unique<juce::AudioParameterInt>(qualityID, qualityName, 1, 2, 1);
+    
+  auto pPhase = std::make_unique<juce::AudioParameterBool>(phaseID, phaseName, false);
 
   params.push_back(std::move(pFilterType));
   params.push_back(std::move(pBandwithType));
@@ -84,7 +86,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout JustaFilterAudioProcessor::c
   params.push_back(std::move(pBandwith));
   params.push_back(std::move(pQGain));
   params.push_back(std::move(pQuality));
-
+  params.push_back(std::move(pPhase));
 
   return { params.begin(), params.end() };
 }
@@ -132,6 +134,17 @@ void JustaFilterAudioProcessor::parameterChanged(const juce::String &parameterID
             overSampleRate = getSampleRate() * oversamplingModule.getOversamplingFactor();
         }
     }
+    
+    if (parameterID == phaseID)
+    {
+        checkPhase(newValue);
+    }
+}
+
+void JustaFilterAudioProcessor::checkPhase(const float p)
+{
+    bool newPhase = static_cast<bool>(p);
+    phaseState = !newPhase;
 }
 
 //==============================================================================
@@ -199,14 +212,17 @@ void JustaFilterAudioProcessor::changeProgramName (int index, const juce::String
 //==============================================================================
 void JustaFilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    // Init Spec
     juce::dsp::ProcessSpec spec;
     spec.maximumBlockSize = samplesPerBlock;
     spec.sampleRate = sampleRate;
     spec.numChannels = getTotalNumOutputChannels();
     
+    // Init Filter
     filterModule.prepare(spec);
     initFilter();
     
+    // Init OS
     oversamplingState = *treeState.getRawParameterValue(qualityID) - 1;
 
     if (oversamplingState)
@@ -223,6 +239,9 @@ void JustaFilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     
     oversamplingModule.reset();
     oversamplingModule.initProcessing(samplesPerBlock);
+    
+    // Init phase
+    checkPhase(*treeState.getRawParameterValue(phaseID));
 }
 
 void JustaFilterAudioProcessor::releaseResources()
@@ -282,6 +301,11 @@ void JustaFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
         filterModule.setParameter(LV_SVFilter::ParameterId::kSampleRate, getSampleRate());
         filterModule.processBlock(audioBlock);
     }
+    
+    if (phaseState)
+    {
+        buffer.applyGain(-1.0f);
+    }
 }
 
 //==============================================================================
@@ -323,7 +347,8 @@ void JustaFilterAudioProcessor::setStateInformation (const void* data, int sizeI
         initFilter();
         
         oversamplingState = *treeState.getRawParameterValue(qualityID) - 1;
-
+        
+        checkPhase(*treeState.getRawParameterValue(phaseID));
     }
 }
 

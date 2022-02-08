@@ -23,6 +23,8 @@
 #define gainName "Gain"
 #define qualityID "quality"
 #define qualityName "Quality"
+#define phaseID "phase"
+#define phaseName "Phase"
 
 //==============================================================================
 /**
@@ -99,7 +101,9 @@ private:
     
     float overSampleRate {44100.0f};
     float projectSampleRate {44100.0f};
-    bool oversamplingState = false;
+    bool oversamplingState {false};
+    bool phaseState {false};
+    void checkPhase(const float p);
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JustaFilterAudioProcessor)

@@ -59,8 +59,8 @@ namespace juce
         
         void mouseEnter (const MouseEvent& event) override
         {
-            setColour(juce::ToggleButton::tickDisabledColourId, juce::Colours::whitesmoke.withAlpha(0.5f));
-            setColour(juce::ToggleButton::tickColourId, juce::Colours::whitesmoke.withAlpha(0.5f));
+            setColour(juce::ToggleButton::tickDisabledColourId, juce::Colours::whitesmoke);
+            setColour(juce::ToggleButton::tickColourId, juce::Colours::whitesmoke);
             
         }
         

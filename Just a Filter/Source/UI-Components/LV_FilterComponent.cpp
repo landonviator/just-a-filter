@@ -43,6 +43,11 @@ LV_FilterComponent::LV_FilterComponent(JustaFilterAudioProcessor& p) : audioProc
       addAndMakeVisible(gainDialLabel);
     gainDialLabel.attachToComponent(&gainDial, false);
     gainDialLabel.setText("Gain", juce::dontSendNotification);
+    
+    // Phase toggle
+    phaseAttach = std::make_unique<ButtonAttachment>(audioProcessor.treeState, phaseID, phaseToggle);
+    addAndMakeVisible(phaseToggle);
+    phaseToggle.setToggleStyle(juce::LV_Toggle::ToggleStyle::kPhase);
 }
 
 LV_FilterComponent::~LV_FilterComponent()
@@ -50,6 +55,7 @@ LV_FilterComponent::~LV_FilterComponent()
     cutoffDialAttach = nullptr;
     qDialAttach = nullptr;
     gainDialAttach = nullptr;
+    phaseAttach = nullptr;
 }
 
 void LV_FilterComponent::paint (juce::Graphics& g)
@@ -63,8 +69,10 @@ void LV_FilterComponent::resized()
     auto topMargin = getHeight() * 0.05f;
     auto dialSize = getWidth() * 0.2f;
     auto spaceBetween = 1.5;
+    auto toggleSize = getWidth() * 0.05;
     
     filterBorder.setBounds(leftMargin, topMargin, getWidth() - leftMargin * 2.0f, getHeight() - topMargin * 2.0f);
+    phaseToggle.setBounds(leftMargin * 1.125, topMargin * 1.5, toggleSize, toggleSize);
     
     cutoffDial.setBounds(leftMargin * 2.0, topMargin * 5.0f, dialSize, dialSize);
     qDial.setBounds(cutoffDial.getX() + cutoffDial.getWidth() * spaceBetween, cutoffDial.getY() * 1.75f, dialSize, dialSize);

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="ssqMdn" name="Just a Filter" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" displaySplashScreen="0" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="0" jucerFormatVersion="1"
+              companyName="Viator DSP">
   <MAINGROUP id="siPWE2" name="Just a Filter">
     <GROUP id="{BB8D3BAD-C433-8ED1-C7DA-1681357E7070}" name="Source">
       <GROUP id="{FB54FCE7-78F5-49EA-8B5D-AECCA88B3CF7}" name="Assets">

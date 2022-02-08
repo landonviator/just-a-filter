@@ -8,7 +8,7 @@
     <key>CFBundleIconFile</key>
     <string></string>
     <key>CFBundleIdentifier</key>
-    <string>com.yourcompany.JustaFilter</string>
+    <string>com.ViatorDSP.JustaFilter</string>
     <key>CFBundleName</key>
     <string>Just a Filter</string>
     <key>CFBundleDisplayName</key>

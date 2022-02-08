@@ -181,7 +181,7 @@ void LV_AlphaDialLAF::drawLabel(Graphics &g, Label &label)
         if (! label.isBeingEdited())
         {
             auto alpha = label.isEnabled() ? 1.0f : 0.5f;
-            const Font font (juce::Font ("Helvetica", 12.0f, juce::Font::FontStyleFlags::bold));
+            const Font font (juce::Font ("Helvetica", 16.0f, juce::Font::FontStyleFlags::bold));
 
             g.setColour (label.findColour (Label::textColourId).withMultipliedAlpha (alpha));
             g.setFont (font);
