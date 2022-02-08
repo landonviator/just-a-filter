@@ -16,11 +16,11 @@ LV_HeaderComponent::LV_HeaderComponent(juce::AudioProcessorValueTreeState& tree)
 {
     using ComboBoxAttachment = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
     
-    //oversamplingMenuAttach = std::make_unique<ComboBoxAttachment>(tree, qualityID, oversamplingMenu);
+    oversamplingMenuAttach = std::make_unique<ComboBoxAttachment>(tree, qualityID, oversamplingMenu);
 
     oversamplingMenu.setTextWhenNothingSelected("Quality");
-    oversamplingMenu.addItem("Normal Quality", 1);
-    oversamplingMenu.addItem("High Quality", 2);
+    oversamplingMenu.addItem("Normal", 1);
+    oversamplingMenu.addItem("High", 2);
     addAndMakeVisible(oversamplingMenu);
     
     bandwidthTypeMenuAttach = std::make_unique<ComboBoxAttachment>(tree, bandwidthTypeID, bandwidthTypeMenu);

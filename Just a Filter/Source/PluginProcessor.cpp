@@ -20,7 +20,8 @@ JustaFilterAudioProcessor::JustaFilterAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), false)
                      #endif
                        ),
-treeState (*this, nullptr, "PARAMETER", createParameterLayout())
+treeState (*this, nullptr, "PARAMETER", createParameterLayout()),
+oversamplingModule(2, 3, juce::dsp::Oversampling<float>::FilterType::filterHalfBandPolyphaseIIR)
 #endif
 {
     treeState.addParameterListener (filterTypeID, this);
@@ -28,6 +29,8 @@ treeState (*this, nullptr, "PARAMETER", createParameterLayout())
     treeState.addParameterListener (cutoffID, this);
     treeState.addParameterListener (bandwidthID, this);
     treeState.addParameterListener (gainID, this);
+    treeState.addParameterListener (qualityID, this);
+
 }
 
 JustaFilterAudioProcessor::~JustaFilterAudioProcessor()
@@ -37,6 +40,8 @@ JustaFilterAudioProcessor::~JustaFilterAudioProcessor()
     treeState.removeParameterListener (cutoffID, this);
     treeState.removeParameterListener (bandwidthID, this);
     treeState.removeParameterListener (gainID, this);
+    treeState.removeParameterListener (qualityID, this);
+
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout JustaFilterAudioProcessor::createParameterLayout()
@@ -71,11 +76,15 @@ juce::AudioProcessorValueTreeState::ParameterLayout JustaFilterAudioProcessor::c
     
   auto pQGain = std::make_unique<juce::AudioParameterFloat>(gainID, gainName, -12.0f, 12.0f, 0.0f);
   
+  auto pQuality = std::make_unique<juce::AudioParameterInt>(qualityID, qualityName, 1, 2, 1);
+
   params.push_back(std::move(pFilterType));
   params.push_back(std::move(pBandwithType));
   params.push_back(std::move(pCutoff));
   params.push_back(std::move(pBandwith));
   params.push_back(std::move(pQGain));
+  params.push_back(std::move(pQuality));
+
 
   return { params.begin(), params.end() };
 }
@@ -106,6 +115,22 @@ void JustaFilterAudioProcessor::parameterChanged(const juce::String &parameterID
     if (parameterID == gainID)
     {
         filterModule.setParameter(LV_SVFilter::ParameterId::kGain, newValue);
+    }
+    
+    /** Oversampling */
+    if (parameterID == qualityID)
+    {
+        if (newValue - 1 == 0)
+        {
+            oversamplingState = false;
+            overSampleRate = getSampleRate();
+        }
+            
+        else
+        {
+            oversamplingState = true;
+            overSampleRate = getSampleRate() * oversamplingModule.getOversamplingFactor();
+        }
     }
 }
 
@@ -181,6 +206,23 @@ void JustaFilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     
     filterModule.prepare(spec);
     initFilter();
+    
+    oversamplingState = *treeState.getRawParameterValue(qualityID) - 1;
+
+    if (oversamplingState)
+    {
+        overSampleRate = spec.sampleRate * oversamplingModule.getOversamplingFactor();
+    }
+
+    else
+    {
+        overSampleRate = spec.sampleRate;
+    }
+
+    projectSampleRate = sampleRate;
+    
+    oversamplingModule.reset();
+    oversamplingModule.initProcessing(samplesPerBlock);
 }
 
 void JustaFilterAudioProcessor::releaseResources()
@@ -225,7 +267,21 @@ void JustaFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
         buffer.clear (i, 0, buffer.getNumSamples());
 
     juce::dsp::AudioBlock<float> audioBlock {buffer};
-    filterModule.processBlock(audioBlock);
+    juce::dsp::AudioBlock<float> upSampledBlock;
+    
+    if (oversamplingState)
+    {
+        upSampledBlock = oversamplingModule.processSamplesUp(audioBlock);
+        filterModule.setParameter(LV_SVFilter::ParameterId::kSampleRate, overSampleRate);
+        filterModule.processBlock(upSampledBlock);
+        oversamplingModule.processSamplesDown(audioBlock);
+    }
+    
+    else
+    {
+        filterModule.setParameter(LV_SVFilter::ParameterId::kSampleRate, getSampleRate());
+        filterModule.processBlock(audioBlock);
+    }
 }
 
 //==============================================================================
@@ -265,6 +321,9 @@ void JustaFilterAudioProcessor::setStateInformation (const void* data, int sizeI
         
         //Filter params
         initFilter();
+        
+        oversamplingState = *treeState.getRawParameterValue(qualityID) - 1;
+
     }
 }
 

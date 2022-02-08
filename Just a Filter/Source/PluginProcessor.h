@@ -95,6 +95,12 @@ private:
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     void parameterChanged (const juce::String& parameterID, float newValue) override;
     
+    juce::dsp::Oversampling<float> oversamplingModule;
+    
+    float overSampleRate {44100.0f};
+    float projectSampleRate {44100.0f};
+    bool oversamplingState = false;
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JustaFilterAudioProcessor)
 };
