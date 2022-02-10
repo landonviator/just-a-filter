@@ -31,6 +31,7 @@ oversamplingModule(2, 3, juce::dsp::Oversampling<float>::FilterType::filterHalfB
     treeState.addParameterListener (gainID, this);
     treeState.addParameterListener (qualityID, this);
     treeState.addParameterListener (phaseID, this);
+    treeState.addParameterListener (trimID, this);
 }
 
 JustaFilterAudioProcessor::~JustaFilterAudioProcessor()
@@ -42,6 +43,7 @@ JustaFilterAudioProcessor::~JustaFilterAudioProcessor()
     treeState.removeParameterListener (gainID, this);
     treeState.removeParameterListener (qualityID, this);
     treeState.removeParameterListener (phaseID, this);
+    treeState.removeParameterListener (trimID, this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout JustaFilterAudioProcessor::createParameterLayout()
@@ -49,7 +51,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout JustaFilterAudioProcessor::c
   std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
 
   // Make sure to update the number of reservations after adding params
-  params.reserve(6);
+  params.reserve(7);
     
     juce::StringArray filterTypes =
     {
@@ -62,23 +64,24 @@ juce::AudioProcessorValueTreeState::ParameterLayout JustaFilterAudioProcessor::c
     
     juce::StringArray qTypes =
     {
-        "Linear",
-        "Proportional"
+        "Linear Q",
+        "Analog Q"
+    };
+    
+    juce::StringArray os =
+    {
+        "No OS",
+        "8X OS"
     };
 
-  auto pFilterType = std::make_unique<juce::AudioParameterChoice>(filterTypeID, filterTypeName, filterTypes, 0);
-    
-  auto pBandwithType = std::make_unique<juce::AudioParameterChoice>(bandwidthTypeID, bandwidthTypeName, qTypes, 0);
-    
+  auto pFilterType = std::make_unique<juce::AudioParameterInt>(filterTypeID, filterTypeName, 0, 4, 0);
+  auto pBandwithType = std::make_unique<juce::AudioParameterInt>(bandwidthTypeID, bandwidthTypeName, 0, 1, 0);
   auto pCutoff = std::make_unique<juce::AudioParameterFloat>(cutoffID, cutoffName, juce::NormalisableRange<float> (20.0f, 20000.0f, 1.0f, 0.3f, false), 1000.0f);
-    
   auto pBandwith = std::make_unique<juce::AudioParameterFloat>(bandwidthID, bandwidthName, 0.05f, 0.95f, 0.33f);
-    
   auto pQGain = std::make_unique<juce::AudioParameterFloat>(gainID, gainName, -12.0f, 12.0f, 0.0f);
-  
-  auto pQuality = std::make_unique<juce::AudioParameterInt>(qualityID, qualityName, 1, 2, 1);
-    
+  auto pQuality = std::make_unique<juce::AudioParameterInt>(qualityID, qualityName, 0, 1, 0);
   auto pPhase = std::make_unique<juce::AudioParameterBool>(phaseID, phaseName, false);
+  auto pTrim = std::make_unique<juce::AudioParameterFloat>(trimID, trimName, -24.0f, 24.0f, 0.0f);
 
   params.push_back(std::move(pFilterType));
   params.push_back(std::move(pBandwithType));
@@ -87,6 +90,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout JustaFilterAudioProcessor::c
   params.push_back(std::move(pQGain));
   params.push_back(std::move(pQuality));
   params.push_back(std::move(pPhase));
+  params.push_back(std::move(pTrim));
 
   return { params.begin(), params.end() };
 }
@@ -138,6 +142,11 @@ void JustaFilterAudioProcessor::parameterChanged(const juce::String &parameterID
     if (parameterID == phaseID)
     {
         checkPhase(newValue);
+    }
+    
+    if (parameterID == trimID)
+    {
+        trimModule.setGainDecibels(newValue);
     }
 }
 
@@ -242,6 +251,9 @@ void JustaFilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     
     // Init phase
     checkPhase(*treeState.getRawParameterValue(phaseID));
+    
+    trimModule.prepare(spec);
+    trimModule.setRampDurationSeconds(0.02);
 }
 
 void JustaFilterAudioProcessor::releaseResources()
@@ -306,6 +318,8 @@ void JustaFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     {
         buffer.applyGain(-1.0f);
     }
+    
+    trimModule.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
 }
 
 //==============================================================================

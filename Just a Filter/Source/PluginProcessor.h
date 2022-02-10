@@ -25,6 +25,8 @@
 #define qualityName "Quality"
 #define phaseID "phase"
 #define phaseName "Phase"
+#define trimID "trim"
+#define trimName "Trim"
 
 //==============================================================================
 /**
@@ -104,6 +106,8 @@ private:
     bool oversamplingState {false};
     bool phaseState {false};
     void checkPhase(const float p);
+    
+    juce::dsp::Gain<float> trimModule;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JustaFilterAudioProcessor)

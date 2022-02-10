@@ -56,6 +56,7 @@
               file="Source/Widgets/LV_GroupComponent.h"/>
         <FILE id="T9W0Er" name="LV_Label.h" compile="0" resource="0" file="Source/Widgets/LV_Label.h"/>
         <FILE id="b8djB3" name="LV_Menu.h" compile="0" resource="0" file="Source/Widgets/LV_Menu.h"/>
+        <FILE id="tZHhG8" name="LV_NumberBox.h" compile="0" resource="0" file="Source/Widgets/LV_NumberBox.h"/>
         <FILE id="Tvy6ym" name="LV_PushButton.h" compile="0" resource="0" file="Source/Widgets/LV_PushButton.h"/>
         <FILE id="WmoXmj" name="LV_Toggle.h" compile="0" resource="0" file="Source/Widgets/LV_Toggle.h"/>
         <FILE id="mdS6Vf" name="StyleSheet.cpp" compile="1" resource="0" file="Source/Widgets/StyleSheet.cpp"/>

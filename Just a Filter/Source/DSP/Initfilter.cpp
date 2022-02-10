@@ -17,4 +17,5 @@ void JustaFilterAudioProcessor::initFilter()
     filterModule.setParameter(LV_SVFilter::ParameterId::kCutoff, *treeState.getRawParameterValue(cutoffID));
     filterModule.setParameter(LV_SVFilter::ParameterId::kQ, *treeState.getRawParameterValue(bandwidthID));
     filterModule.setParameter(LV_SVFilter::ParameterId::kGain, *treeState.getRawParameterValue(gainID));
+    trimModule.setGainDecibels(*treeState.getRawParameterValue(trimID));
 }

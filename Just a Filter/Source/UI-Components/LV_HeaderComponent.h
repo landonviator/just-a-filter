@@ -33,10 +33,15 @@ private:
     juce::LV_Menu bandwidthTypeMenu;
     
     using ComboBoxAttachment = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
+    using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
     
     std::unique_ptr<ComboBoxAttachment> oversamplingMenuAttach;
     std::unique_ptr<ComboBoxAttachment> filterTypeMenuAttach;
     std::unique_ptr<ComboBoxAttachment> bandwidthTypeMenuAttach;
+    std::unique_ptr<SliderAttachment> trimAttach;
+    
+    juce::LV_NumberBox trimSlider;
+    juce::LV_PushButton trimReset;
     
     /** Logo and Link =========================================================*/
     juce::Image footerLogo;

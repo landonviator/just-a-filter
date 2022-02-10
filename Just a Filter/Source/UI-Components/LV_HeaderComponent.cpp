@@ -13,30 +13,39 @@
 
 //==============================================================================
 LV_HeaderComponent::LV_HeaderComponent(juce::AudioProcessorValueTreeState& tree)
+: trimSlider(" Trim", -24.0, 24.0, 0.1, 0.0)
 {
     using ComboBoxAttachment = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
-    
-    oversamplingMenuAttach = std::make_unique<ComboBoxAttachment>(tree, qualityID, oversamplingMenu);
 
-    oversamplingMenu.setTextWhenNothingSelected("Quality");
-    oversamplingMenu.addItem("Normal", 1);
-    oversamplingMenu.addItem("High", 2);
+    oversamplingMenu.addItem("No OS", 1);
+    oversamplingMenu.addItem("8X", 2);
+    oversamplingMenuAttach = std::make_unique<ComboBoxAttachment>(tree, qualityID, oversamplingMenu);
     addAndMakeVisible(oversamplingMenu);
     
+    bandwidthTypeMenu.addItem("Linear Q", 1);
+    bandwidthTypeMenu.addItem("Analog Q", 2);
     bandwidthTypeMenuAttach = std::make_unique<ComboBoxAttachment>(tree, bandwidthTypeID, bandwidthTypeMenu);
-    bandwidthTypeMenu.setTextWhenNothingSelected("Q");
-    bandwidthTypeMenu.addItem("Linear", 1);
-    bandwidthTypeMenu.addItem("Propotional", 2);
     addAndMakeVisible(bandwidthTypeMenu);
     
-    filterTypeMenuAttach = std::make_unique<ComboBoxAttachment>(tree, filterTypeID, filterTypeMenu);
-    filterTypeMenu.setTextWhenNothingSelected("Type");
     filterTypeMenu.addItem("Low Shelf", 1);
     filterTypeMenu.addItem("Low Cut", 2);
     filterTypeMenu.addItem("Notch", 3);
     filterTypeMenu.addItem("High Cut", 4);
     filterTypeMenu.addItem("High Shelf", 5);
+    filterTypeMenuAttach = std::make_unique<ComboBoxAttachment>(tree, filterTypeID, filterTypeMenu);
     addAndMakeVisible(filterTypeMenu);
+    
+    trimAttach = std::make_unique<SliderAttachment>(tree, trimID, trimSlider);
+    addAndMakeVisible(trimSlider);
+    
+    trimReset.onClick = [this]() 
+    {
+        trimSlider.setValue(0.0);
+    };
+    
+    trimReset.setButtonText("Reset");
+    trimReset.setClickingTogglesState(false);
+    addAndMakeVisible(trimReset);
 }
 
 LV_HeaderComponent::~LV_HeaderComponent()
@@ -44,6 +53,7 @@ LV_HeaderComponent::~LV_HeaderComponent()
     oversamplingMenuAttach = nullptr;
     filterTypeMenuAttach = nullptr;
     bandwidthTypeMenuAttach = nullptr;
+    trimAttach = nullptr;
 }
 
 void LV_HeaderComponent::paint (juce::Graphics& g)
@@ -77,6 +87,8 @@ void LV_HeaderComponent::resized()
     oversamplingMenu.setBounds(rightMargin - menuWidth, topMargin, menuWidth, menuHeight);
     bandwidthTypeMenu.setBounds(oversamplingMenu.getX() - spaceBetween - oversamplingMenu.getWidth(), topMargin, menuWidth, menuHeight);
     filterTypeMenu.setBounds(bandwidthTypeMenu.getX() - spaceBetween - bandwidthTypeMenu.getWidth(), topMargin, menuWidth, menuHeight);
+    trimSlider.setBounds(filterTypeMenu.getX() - spaceBetween - bandwidthTypeMenu.getWidth() / 1.5, topMargin, menuWidth / 1.5, menuHeight);
+    trimReset.setBounds(trimSlider.getX() - spaceBetween - trimSlider.getWidth(), topMargin, trimSlider.getWidth(), menuHeight);
 }
 
 void LV_HeaderComponent::setWidthAndHeight(float w, float h)

@@ -16,4 +16,5 @@
 #include "../Widgets/LV_Label.h"
 #include "../Widgets/LV_Menu.h"
 #include "../Widgets/LV_PushButton.h"
+#include "../Widgets/LV_NumberBox.h"
 #include "../Widgets/StyleSheet.h"

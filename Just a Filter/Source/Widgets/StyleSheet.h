@@ -73,6 +73,29 @@ namespace juce
         void drawLabel (Graphics& g, Label& label) override;
     };
 
+    class LV_CustomNumberBox : public juce::LookAndFeel_V4
+    {
+        
+    public:
+        
+        void drawLinearSlider (Graphics& g, int x, int y, int width, int height,
+                                               float sliderPos,
+                                               float minSliderPos,
+                                               float maxSliderPos,
+                               const Slider::SliderStyle style, Slider& slider) override;
+
+        void drawLabel (Graphics& g, Label& label) override;
+    };
+
+    class LV_CustomPushButton : public juce::LookAndFeel_V4
+    {
+        
+    public:
+        
+        void drawButtonText (Graphics& g, TextButton& button,
+                             bool /*shouldDrawButtonAsHighlighted*/, bool /*shouldDrawButtonAsDown*/) override;
+    };
+
 
     class LV_FaderLAF : public LookAndFeel_V4
     {
